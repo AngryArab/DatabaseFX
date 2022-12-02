@@ -1,4 +1,5 @@
 package com.example.databasefx;
+import javax.sql.rowset.*;
 import java.sql.*;
 
 
@@ -82,9 +83,14 @@ public class DBUtil {
 
     public static ResultSet query(String sql) throws SQLException{
 
+        CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+
+
         dbConnect();
         ResultSet resultSet = null;
         resultSet = statement.executeQuery(sql);
+
+        crs.populate(resultSet);
 
         while (resultSet.next()){
             int id = resultSet.getInt("s_id");
@@ -98,7 +104,7 @@ public class DBUtil {
 
         dbDisconnect();
 
-        return null;
+        return crs;
     }
 
 
@@ -106,15 +112,16 @@ public class DBUtil {
     public static void main(String[] args) throws SQLException {
 
         dbConnect();
-
         dbDisconnect();
         DropTable("Testtable");
         CreateTable("test table");
-
         insertData("test table" , 1, "TLX");
         insertData("test table" , 6, "ILX");
+        query("SELECT * FROM testTable");
         deletetData("test table delete", 1);
-       // DropTable("test drop table");
+        // DropTable("test drop table");
+
+
 
 
 
