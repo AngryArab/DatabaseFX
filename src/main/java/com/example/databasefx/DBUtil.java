@@ -71,6 +71,36 @@ public class DBUtil {
 
     }
 
+    public static void deletetData(String tableName, int id) throws SQLException{
+        dbConnect();
+        String sql = "DELETE FROM " + tableName + "WHERE s_id =" + id;
+        statement.executeUpdate(sql);
+        System.out.println("Data is deleted");
+
+
+    }
+
+    public static ResultSet query(String sql) throws SQLException{
+
+        dbConnect();
+        ResultSet resultSet = null;
+        resultSet = statement.executeQuery(sql);
+
+        while (resultSet.next()){
+            int id = resultSet.getInt("s_id");
+            String name = resultSet.getString("s_name");
+            System.out.println(id + ", " + name);
+        }
+        if(statement != null){
+            statement.close();
+
+        }
+
+        dbDisconnect();
+
+        return null;
+    }
+
 
 
     public static void main(String[] args) throws SQLException {
@@ -78,11 +108,12 @@ public class DBUtil {
         dbConnect();
 
         dbDisconnect();
-
+        DropTable("Testtable");
         CreateTable("test table");
 
         insertData("test table" , 1, "TLX");
-
+        insertData("test table" , 6, "ILX");
+        deletetData("test table delete", 1);
        // DropTable("test drop table");
 
 
